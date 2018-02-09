@@ -10,6 +10,7 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 public class NameServiceStatsHandler implements RequestHandler<NameInfo, NameStats> {
 
+	//this static instance will global to the AWS lambda container while the container is warm (~15mins) 
 	private static NameLookup nameInfo = new BaseNameLookup();
 
 	@Override
