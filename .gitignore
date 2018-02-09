@@ -1,0 +1,10 @@
+dependency-reduced-pom.xml
+.classpath
+.project
+.apt_generated
+.factorypath
+.keyfile
+.settings/
+.directory
+.springBeans
+target/
