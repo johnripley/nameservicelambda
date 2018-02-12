@@ -14,6 +14,10 @@ public class NameServiceGenderHandler implements RequestHandler<BaseNameInfo, Ge
 	private static NameLookup nameInfo = new BaseNameLookup();
 
 	@Override
+	/**
+	 * Note: we use BaseNameInfo as opposed to NameInfo as the default Jackson serialization
+	 * 
+	 */
 	public GenderInfo handleRequest(BaseNameInfo input, Context context) {
 		context.getLogger().log("Input: " + input);
 		return nameInfo.getGender(input);

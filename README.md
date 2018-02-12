@@ -58,7 +58,54 @@ Test
       "totalFemale": 1713259
     }
 
+API Gateway
 
+Create new API
+  name-service			
+Create resource (gender)
+  create method (GET) on gender
+    integration type = lambda function
+    region = US-EAST1
+    Lambda Function = NameServiceGender
+    Method Request
+      Settings - RequestValidator = Validate query string parameters and headers
+      URL Query String Parameters
+	name
+	year
+    Integration Request
+      Body Mapping Templates
+	When there are no templates defined (recommended)
+	Add mapping template (appliction/json)
+	click application/json (template box will appear below)
+	use 
+	  { "name": "$input.params('name')", "year": "$input.params('year')"}
+	
+    Go back to GET method on left side
+      test (name = Madison, year = 2004)
+
+      Request: /gender?name=Madison&year=2004
+      Status: 200
+      Latency: 81 ms
+      Response Body
+
+      {
+	"name": "Madison",
+	"year": 2004,
+	"gender": "F",
+	"confidence": 0.99
+      }
+
+   
+      
+
+      
+      
+      
+      
+      
+      
+      
+    
   
   
   

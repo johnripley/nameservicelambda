@@ -10,9 +10,15 @@ import com.amazonaws.services.lambda.runtime.RequestHandler;
 
 public class NameServiceStatsHandler implements RequestHandler<BaseNameInfo, NameStats> {
 
-	//this static instance will global to the AWS lambda container while the container is warm (~15mins) 
+	// this static instance will global to the AWS lambda container while the
+	// container is warm (~15mins)
 	private static NameLookup nameInfo = new BaseNameLookup();
 
+	/**
+	 * Note: we use the concrete BaseNameInfo class as opposed to NameInfo
+	 * interface. The Jackson auto-serialization that AWS lambda will perform
+	 * requires a concrete class, not an interface
+	 */
 	@Override
 	public NameStats handleRequest(BaseNameInfo input, Context context) {
 		context.getLogger().log("Input: " + input);
