@@ -1,26 +1,24 @@
 package org.johnripley.nameservicelambda;
 
+import java.io.IOException;
+
+import org.johnripley.aws.lambda.AbstractRequestStreamHandler;
 import org.johnripley.nameinfo.BaseNameInfo;
 import org.johnripley.nameinfo.BaseNameLookup;
 import org.johnripley.nameinfo.GenderInfo;
 import org.johnripley.nameinfo.NameLookup;
+import org.json.JSONObject;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
+public class NameServiceGenderHandler extends AbstractRequestStreamHandler {
 
-public class NameServiceGenderHandler implements RequestHandler<BaseNameInfo, GenderInfo> {
-
-	//this static instance will global to the AWS lambda container while the container is warm (~15mins) 
 	private static NameLookup nameInfo = new BaseNameLookup();
 
 	@Override
-	/**
-	 * Note: we use BaseNameInfo as opposed to NameInfo as the default Jackson serialization
-	 * 
-	 */
-	public GenderInfo handleRequest(BaseNameInfo input, Context context) {
-		context.getLogger().log("Input: " + input);
-		return nameInfo.getGender(input);
+	protected void doProcessRequest(JSONObject request, JSONObject response) throws IOException {
+		GenderInfo gi = nameInfo.getGender(new BaseNameInfo(request.optString("name", ""), request.optInt("", 0)));
+		response.put("name", gi.getName());
+		response.put("gender", gi.getGender());
+		response.put("confidence", gi.getConfidence());
 	}
 
 }

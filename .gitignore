@@ -8,3 +8,4 @@ dependency-reduced-pom.xml
 .directory
 .springBeans
 target/
+.serverless/

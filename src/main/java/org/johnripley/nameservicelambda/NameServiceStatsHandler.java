@@ -1,28 +1,27 @@
 package org.johnripley.nameservicelambda;
 
+import java.io.IOException;
+
+import org.johnripley.aws.lambda.AbstractRequestStreamHandler;
 import org.johnripley.nameinfo.BaseNameInfo;
 import org.johnripley.nameinfo.BaseNameLookup;
 import org.johnripley.nameinfo.NameLookup;
 import org.johnripley.nameinfo.NameStats;
+import org.json.JSONObject;
 
-import com.amazonaws.services.lambda.runtime.Context;
-import com.amazonaws.services.lambda.runtime.RequestHandler;
+public class NameServiceStatsHandler extends AbstractRequestStreamHandler {
 
-public class NameServiceStatsHandler implements RequestHandler<BaseNameInfo, NameStats> {
-
-	// this static instance will global to the AWS lambda container while the
-	// container is warm (~15mins)
 	private static NameLookup nameInfo = new BaseNameLookup();
 
-	/**
-	 * Note: we use the concrete BaseNameInfo class as opposed to NameInfo
-	 * interface. The Jackson auto-serialization that AWS lambda will perform
-	 * requires a concrete class, not an interface
-	 */
 	@Override
-	public NameStats handleRequest(BaseNameInfo input, Context context) {
-		context.getLogger().log("Input: " + input);
-		return nameInfo.getStatistic(input);
+	protected void doProcessRequest(JSONObject request, JSONObject response) throws IOException {
+		NameStats ns = nameInfo.getStatistic(new BaseNameInfo(request.optString("name", ""), request.optInt("year", 0)));
+		response.put("name", ns.getName());
+		response.put("year", ns.getYear());
+		response.put("countMale", ns.getCountMale());
+		response.put("countFemale", ns.getCountFemale());
+		response.put("totalMale", ns.getTotalMale());
+		response.put("toalFemale", ns.getTotalFemale());
 	}
 
 }
