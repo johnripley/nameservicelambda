@@ -2,7 +2,7 @@
 
 ### Instructions on moving our Spring Boot based nameservice into an Lambda function on AWS  
 
-#### Creating the functions  
+#### Creating the functions (the manual way)  
 
  1. Navigate to AWS Lambda
  2. Create Function
@@ -60,7 +60,7 @@ Get ready from some trial and error
       "totalFemale": 1713259
     }
 
-#### Creating the API  
+#### Creating the API (the manual way) 
     
  1. Navigate to API Gateway
  2. Create new API
@@ -97,9 +97,54 @@ Get ready from some trial and error
 	"confidence": 0.99
       }
 
-   
-      
+#### Serverless (the easy way)
 
+ 1. Follow the instructions to install the Serverless Framework (https://serverless.com/framework/docs/providers/aws/guide/installation/)
+ 2. Run serverless deploy --verbose from project root driectory (where serverless.yml is located)
+ 3. Output shoul be similar to
+ 
+Serverless: Packaging service...
+Serverless: Uploading CloudFormation file to S3...
+Serverless: Uploading artifacts...
+Serverless: Validating template...
+Serverless: Updating Stack...
+Serverless: Checking Stack update progress...
+CloudFormation - UPDATE_IN_PROGRESS - AWS::CloudFormation::Stack - name-service-serverless-dev
+CloudFormation - UPDATE_IN_PROGRESS - AWS::Lambda::Function - NameServiceStatsLambdaFunction
+CloudFormation - UPDATE_IN_PROGRESS - AWS::Lambda::Function - NameServiceGenderLambdaFunction
+CloudFormation - UPDATE_COMPLETE - AWS::Lambda::Function - NameServiceGenderLambdaFunction
+CloudFormation - UPDATE_COMPLETE - AWS::Lambda::Function - NameServiceStatsLambdaFunction
+CloudFormation - CREATE_IN_PROGRESS - AWS::ApiGateway::Deployment - ApiGatewayDeployment1519663417549
+CloudFormation - CREATE_IN_PROGRESS - AWS::ApiGateway::Deployment - ApiGatewayDeployment1519663417549
+CloudFormation - CREATE_COMPLETE - AWS::ApiGateway::Deployment - ApiGatewayDeployment1519663417549
+CloudFormation - UPDATE_COMPLETE_CLEANUP_IN_PROGRESS - AWS::CloudFormation::Stack - name-service-serverless-dev
+CloudFormation - DELETE_IN_PROGRESS - AWS::ApiGateway::Deployment - ApiGatewayDeployment1518476903543
+CloudFormation - DELETE_COMPLETE - AWS::ApiGateway::Deployment - ApiGatewayDeployment1518476903543
+CloudFormation - UPDATE_COMPLETE - AWS::CloudFormation::Stack - name-service-serverless-dev
+Serverless: Stack update finished...
+Service Information
+service: name-service-serverless
+stage: dev
+region: us-east-1
+stack: name-service-serverless-dev
+api keys:
+  None
+endpoints:
+  GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/gender
+  GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/stats
+functions:
+  NameServiceGender: name-service-serverless-dev-NameServiceGender
+  NameServiceStats: name-service-serverless-dev-NameServiceStats
+...
+
+
+  4. Note end endpoints above:  
+    - GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/gender
+    - GET - https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/stats
+
+  5. Try it out
+    - curl -X GET 'https://xxxxxxxxxx.execute-api.us-east-1.amazonaws.com/dev/gender?name=Connor&year=2014' -H 'Accept:application/json'
+    
       
       
       
